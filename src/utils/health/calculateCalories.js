@@ -25,5 +25,8 @@ export const calculateDailyCalories = ({
   if (goal === "lose") calories -= 400;
   if (goal === "gain") calories += 400;
 
-  return Math.round(calories);
+  return {
+  dailyCalories: Math.round(calories),
+  tdee: Math.round(bmr * activityMultiplier[activityLevel])
+};
 };
