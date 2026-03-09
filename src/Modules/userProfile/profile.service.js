@@ -5,23 +5,27 @@ import { calculateWeightDuration } from "../../utils/health/calculateWeightDurat
 import { User } from "../../DB/models/user.model.js";
 
 
-export const upsertProfile =async(req, res, next)=>{
+export const upsertProfile = async(req, res, next) =>{
   const userId = req.authUser._id;
-  const {dailyCalories,tdee} = calculateDailyCalories(req.body);
-  const macros = calculateMacros(dailyCalories);
-  let duration = null;
-  if (req.body.goal==="lose"&&req.body.targetLoseKg) {
+  const {dailyCalories, tdee} = calculateDailyCalories(req.body);
+  const macros =calculateMacros(dailyCalories);
+  let estimatedWeightLoss = null;
+  if(req.body.goal ==="lose" && req.body.targetLoseKg){
     estimatedWeightLoss = calculateWeightDuration({
       tdee,
       dailyCalories,
       targetLoseKg: req.body.targetLoseKg
     });
   }
-  const profile = await UserProfile.findOneAndUpdate({userId},
+
+  const profile = await UserProfile.findOneAndUpdate(
+    {userId},
     {...req.body,dailyCalories,macros},
-    {new:true,upsert:true}
-  );
-  return res.status(200).json({success:true,data:profile,estimatedWeightLoss});
+    {new:true, upsert:true} );
+  return res.status(200).json({
+    success: true,
+    data: profile,
+    estimatedWeightLoss});
 };
 
 export const getMyProfile =async(req, res, next)=>{
