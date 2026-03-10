@@ -11,11 +11,11 @@ export const upsertProfile = async (req, res, next) =>{
 
   const macros = calculateMacros(dailyCalories);
 
-  let estimatedWeightLoss = null;
+  let estimatedWeightChange = null;
 
   if(req.body.goal === "lose" && req.body.targetLoseKg){
 
-    estimatedWeightLoss = calculateWeightChangeDuration({
+    estimatedWeightChange = calculateWeightChangeDuration({
       tdee,
       dailyCalories,
       targetKg: req.body.targetLoseKg,
