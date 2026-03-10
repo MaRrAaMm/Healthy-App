@@ -2,6 +2,7 @@ import { UserProfile } from "../../DB/models/userProfile.model.js";
 import { calculateDailyCalories } from "../../utils/health/calculateCalories.js";
 import { calculateMacros } from "../../utils/health/calculateMacros.js";
 import { calculateWeightChangeDuration } from "../../utils/health/calculateWeightDuration.js";
+import { calculateWeightProgress } from "../../utils/health/calculateWeightProgress.js";
 import { User } from "../../DB/models/user.model.js";
 
 
