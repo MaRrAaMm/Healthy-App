@@ -6,6 +6,7 @@ export const calculateDailyCalories = ({
   activityLevel,
   goal,
 }) => {
+
   let bmr;
 
   if (gender === "male") {
@@ -20,13 +21,28 @@ export const calculateDailyCalories = ({
     high: 1.725,
   };
 
-  let calories = bmr * activityMultiplier[activityLevel];
+  const tdee = bmr * activityMultiplier[activityLevel];
 
-  if (goal === "lose") calories -= 400;
-  if (goal === "gain") calories += 400;
+  let calories = tdee;
+
+  if (goal === "lose") {
+
+    const deficitMap = {
+      low: 400,
+      moderate: 500,
+      high: 600
+    };
+
+    calories = tdee - deficitMap[activityLevel];
+  }
+
+  if (goal === "gain") {
+    calories = tdee + 400;
+  }
 
   return {
-  dailyCalories: Math.round(calories),
-  tdee: Math.round(bmr * activityMultiplier[activityLevel])
-};
+    dailyCalories: Math.round(calories),
+    tdee: Math.round(tdee)
+  };
+
 };
