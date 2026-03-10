@@ -8,7 +8,6 @@ export const calculateDailyCalories = ({
 }) => {
 
   let bmr;
-
   if (gender === "male") {
     bmr = 10 * weight + 6.25 * height - 5 * age + 5;
   } else {
@@ -22,9 +21,7 @@ export const calculateDailyCalories = ({
   };
 
   const tdee = bmr * activityMultiplier[activityLevel];
-
   let calories = tdee;
-
   if (goal === "lose") {
 
     const deficitMap = {
