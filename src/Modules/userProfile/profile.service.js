@@ -8,20 +8,16 @@ import { User } from "../../DB/models/user.model.js";
 export const upsertProfile = async (req, res, next) =>{
   const userId = req.authUser._id;
   const{ dailyCalories, tdee} = calculateDailyCalories(req.body);
-
   const macros = calculateMacros(dailyCalories);
-
   let estimatedWeightChange = null;
 
   if(req.body.goal === "lose" && req.body.targetLoseKg){
-
     estimatedWeightChange = calculateWeightChangeDuration({
       tdee,
       dailyCalories,
       targetKg: req.body.targetLoseKg,
       type: "lose"
     });
-
   }
   if(req.body.goal === "gain" && req.body.targetGainKg){
   estimatedWeightChange = calculateWeightChangeDuration({
@@ -42,7 +38,7 @@ export const upsertProfile = async (req, res, next) =>{
   return res.status(200).json({
     success: true,
     data: profile,
-    estimatedWeightLoss
+    estimatedWeightChange
   });
 
 };
