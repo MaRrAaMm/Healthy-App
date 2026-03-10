@@ -24,9 +24,9 @@ export const calculateDailyCalories = ({
   const tdee = bmr * activityMultiplier[activityLevel];
 
   const deficit = {
-    low: 500,
-    moderate: 650,
-    high: 800
+    low: 700,
+    moderate: 850,
+    high: 1000
   };
 
   const surplus = {
