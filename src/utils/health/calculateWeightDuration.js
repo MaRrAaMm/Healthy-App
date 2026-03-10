@@ -1,13 +1,23 @@
-export const calculateWeightDuration = ({ 
-  tdee, 
-  dailyCalories, 
-  targetLoseKg}) => {
-  const deficitPerDay = tdee - dailyCalories;
-  const caloriesToLose = targetLoseKg * 7700;
+export const calculateWeightChangeDuration = ({
+  tdee,
+  dailyCalories,
+  targetKg,
+  type,
+}) => {
 
-  const days = Math.ceil(caloriesToLose / deficitPerDay);
+  let changePerDay;
+
+  if(type === "lose"){
+    changePerDay = tdee - dailyCalories;
+  }
+
+  if(type === "gain"){
+    changePerDay = dailyCalories - tdee;
+  }
+  const totalCalories = targetKg * 7700;
+  const days = Math.ceil(totalCalories / changePerDay);
   const weeks = Math.ceil(days / 7);
-  const months = Math.ceil(weeks / 4);
-  return { days, weeks,months};
+  const months = Math.ceil(days / 30);
 
+  return { days, weeks, months};
 };
