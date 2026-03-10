@@ -39,6 +39,7 @@ export const calculateDailyCalories = ({
 
   if (goal === "lose") {
     calories = tdee - deficit[activityLevel];
+    console.log("DEFICIT", deficit[activityLevel])
   }
 
   if (goal === "gain") {
