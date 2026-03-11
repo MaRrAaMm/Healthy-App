@@ -12,6 +12,9 @@ export const isAuthenticate = async(req, res, next)=>{
   if (!user){
     throw new Error("User not found");
   }
+  if(user.isDeleted){
+    return next(new Error("Account has been deleted", { cause: 403 }));
+  }
   req.authUser = user;
   next();
 };

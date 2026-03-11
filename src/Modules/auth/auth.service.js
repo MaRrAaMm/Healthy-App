@@ -8,7 +8,7 @@ import { verifyGoogleToken } from "../../utils/google/verifyGoogle.js";
 
 export const signup = async(req, res, next)=>{
   const{userName, email, password, phone}= req.body;
-  const exists = await User.findOne({email,isDeleted: false});
+  const exists = await User.findOne({email:req.body.email,isDeleted:false});
   if(exists){
     throw new Error("Email already exists");
   }
