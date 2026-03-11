@@ -9,7 +9,7 @@ import { User } from "../../DB/models/user.model.js";
 export const upsertProfile = async (req, res, next) =>{
   const userId =req.authUser._id;
   const user = await User.findById(userId);
-  if(user){return next(new Error("User not found",{cause: 404}));}
+  if(!user){return next(new Error("User not found",{cause: 404}));}
   const{dailyCalories, tdee}= calculateDailyCalories(req.body);
   const macros =calculateMacros(dailyCalories);
 
@@ -58,7 +58,7 @@ export const upsertProfile = async (req, res, next) =>{
 export const getMyProfile = async(req, res, next) =>{
   const userId = req.authUser._id;
   const user = await User.findById(userId);
-  if(user){return next(new Error("User not found",
+  if(!user){return next(new Error("User not found",
     {cause:403}));}
   const profile = await UserProfile.findOne({userId});
   if(!profile){
