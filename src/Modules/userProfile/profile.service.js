@@ -6,83 +6,75 @@ import { calculateWeightProgress } from "../../utils/health/calculateWeightProgr
 import { User } from "../../DB/models/user.model.js";
 
 
-export const upsertProfile = async (req, res, next) => {
-
-  const userId = req.authUser._id;
-
-  const { dailyCalories, tdee } = calculateDailyCalories(req.body);
-
-  const macros = calculateMacros(dailyCalories);
+export const upsertProfile = async (req, res, next) =>{
+  const userId =req.authUser._id;
+  const user = await User.findById(userId);
+  if(user?.isDeleted){return next(new Error("Account has been deleted",{cause: 403}));}
+  const{dailyCalories, tdee}= calculateDailyCalories(req.body);
+  const macros =calculateMacros(dailyCalories);
 
   let estimatedWeightChange = null;
-  let weightProgress = null;
-
-  if (req.body.goal === "lose" && req.body.targetLoseKg) {
-
-    estimatedWeightChange = calculateWeightChangeDuration({
+  let weightProgress =null;
+  if(req.body.goal=== "lose" &&req.body.targetLoseKg){
+    estimatedWeightChange =calculateWeightChangeDuration({
       tdee,
       dailyCalories,
-      targetKg: req.body.targetLoseKg,
-      type: "lose"
-    });
-
+      targetKg:req.body.targetLoseKg,
+      type:"lose"
+  });
     weightProgress = calculateWeightProgress({
-      currentWeight: req.body.weight,
-      targetKg: req.body.targetLoseKg,
-      weeks: estimatedWeightChange.weeks,
-      type: "lose"
-    });
+      currentWeight:req.body.weight,
+      targetKg:req.body.targetLoseKg,
+      weeks:estimatedWeightChange.weeks,
+      type:"lose"
+  });}
 
-  }
-
-  if (req.body.goal === "gain" && req.body.targetGainKg) {
-
-    estimatedWeightChange = calculateWeightChangeDuration({
+  if(req.body.goal ==="gain" && req.body.targetGainKg){
+    estimatedWeightChange =calculateWeightChangeDuration({
       tdee,
       dailyCalories,
-      targetKg: req.body.targetGainKg,
-      type: "gain"
+      targetKg:req.body.targetGainKg,
+      type:"gain"
     });
-
     weightProgress = calculateWeightProgress({
-      currentWeight: req.body.weight,
-      targetKg: req.body.targetGainKg,
-      weeks: estimatedWeightChange.weeks,
-      type: "gain"
-    });
-
-  }
+      currentWeight:req.body.weight,
+      targetKg:req.body.targetGainKg,
+      weeks:estimatedWeightChange.weeks,
+      type:"gain"
+  });}
 
   const profile = await UserProfile.findOneAndUpdate(
-    { userId },
-    { ...req.body, dailyCalories, macros },
-    { new: true, upsert: true }
-  );
-
+    {userId},
+    {...req.body, dailyCalories, macros},
+    {new:true, upsert:true});
   return res.status(200).json({
-    success: true,
-    data: profile,
+    success:true,
+    data:profile,
     estimatedWeightChange,
     weightProgress
-  });
-
+});
 };
 
-export const getMyProfile =async(req, res, next)=>{
-  const profile = await UserProfile.findOne({userId:req.authUser._id});
-  if(!profile)return next(new Error("profile not found",{cause:404}));
-  return res.status(200).json({success:true,data:profile});
+export const getMyProfile = async(req, res, next) =>{
+  const userId = req.authUser._id;
+  const user = await User.findById(userId);
+  if(user?.isDeleted){return next(new Error("Account has been deleted",
+    {cause:403}));}
+  const profile = await UserProfile.findOne({userId});
+  if(!profile){
+    return next(new Error("profile not found",{cause:404}));}
+    return res.status(200).json({success:true, data:profile});
 };
 
-export const deleteAccount =async(req, res, next)=>{
+
+export const deleteAccount = async(req, res, next) =>{
   const userId = req.authUser._id;
   await User.findByIdAndUpdate(userId,{
     isDeleted:true,
-    deletedAt:new Date(),
-  });
+    deletedAt:new Date(),});
 
   return res.status(200).json({
-    success: true,
-    message: "Account deleted successfully",
+    success:true,
+    message:"Account deleted successfully",
   });
 };

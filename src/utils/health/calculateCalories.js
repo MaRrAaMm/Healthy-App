@@ -30,9 +30,9 @@ export const calculateDailyCalories = ({
   };
 
   const surplus = {
-    low: 400,
-    moderate: 550,
-    high: 700
+    low: 600,
+    moderate: 750,
+    high: 900
   };
 
   let calories = tdee;
