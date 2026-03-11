@@ -67,14 +67,12 @@ export const getMyProfile = async(req, res, next) =>{
 };
 
 
-export const deleteAccount = async(req, res, next) =>{
+export const deleteAccount = async (req, res, next)=>{
   const userId = req.authUser._id;
-  await User.findByIdAndUpdate(userId,{
-    isDeleted:true,
-    deletedAt:new Date(),});
-
+  await User.findByIdAndDelete(userId);
   return res.status(200).json({
-    success:true,
-    message:"Account deleted successfully",
+    success: true,
+    message: "Account deleted successfully",
   });
+
 };
