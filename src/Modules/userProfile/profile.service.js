@@ -9,7 +9,7 @@ import { User } from "../../DB/models/user.model.js";
 export const upsertProfile = async (req, res, next) =>{
   const userId =req.authUser._id;
   const user = await User.findById(userId);
-  if(user?.isDeleted){return next(new Error("Account has been deleted",{cause: 403}));}
+  if(user){return next(new Error("User not found",{cause: 404}));}
   const{dailyCalories, tdee}= calculateDailyCalories(req.body);
   const macros =calculateMacros(dailyCalories);
 
@@ -46,7 +46,7 @@ export const upsertProfile = async (req, res, next) =>{
   const profile = await UserProfile.findOneAndUpdate(
     {userId},
     {...req.body, dailyCalories, macros},
-    {new:true, upsert:true});
+    {new:true, upsert:true,runValidators:true});
   return res.status(200).json({
     success:true,
     data:profile,
@@ -58,7 +58,7 @@ export const upsertProfile = async (req, res, next) =>{
 export const getMyProfile = async(req, res, next) =>{
   const userId = req.authUser._id;
   const user = await User.findById(userId);
-  if(user?.isDeleted){return next(new Error("Account has been deleted",
+  if(user){return next(new Error("User not found",
     {cause:403}));}
   const profile = await UserProfile.findOne({userId});
   if(!profile){
@@ -70,9 +70,10 @@ export const getMyProfile = async(req, res, next) =>{
 export const deleteAccount = async (req, res, next)=>{
   const userId = req.authUser._id;
   await User.findByIdAndDelete(userId);
+  await UserProfile.findOneAndDelete({userId});
   return res.status(200).json({
     success: true,
-    message: "Account deleted successfully",
+    message:"Account deleted successfully",
   });
 
 };
