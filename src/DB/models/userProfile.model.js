@@ -37,7 +37,7 @@ const profileSchema = new Schema({
 
   activityLevel:{
     type: String,
-    enum:["low", "moderate", "high"],
+    enum:["sedentary","light","moderate","very"],
     required: true,
   },
 
