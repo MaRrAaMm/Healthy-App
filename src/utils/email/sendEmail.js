@@ -2,7 +2,7 @@ import { transporter } from "./transporter.js";
 
 export const sendEmail = async ({to, subject, html}) =>{
   const info = await transporter.sendMail({
-    from: `"Fuel Your Day" <${process.env.EMAIL}>`,
+    from: `"Healthy App" <${process.env.EMAIL}>`,
     to,
     subject,
     html,
