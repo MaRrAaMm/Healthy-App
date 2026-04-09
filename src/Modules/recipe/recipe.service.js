@@ -55,7 +55,6 @@ if(sort && allowedSortFields.includes(sort)){
     .sort(sortOption)
     .skip(skip)
     .limit(Number(limit));
-
   const total = await Recipe.countDocuments(filter);
   let favoriteSet =new Set();
   if(req.authUser){
@@ -107,23 +106,19 @@ export const rateRecipe = async (req, res, next)=>{
   const userId = req.authUser._id;
   const{id} = req.params;
   const{rating} = req.body;
-
   const recipe = await Recipe.findById(id);
   if(!recipe || !recipe.isActive){
-    return next(new Error("Recipe not found",{cause: 404}));
-}
-
+  return next(new Error("Recipe not found",{cause: 404}));
+  }
   const existingRating = await RecipeRating.findOne({userId, recipeId: id});
 
   if (existingRating){
     const oldRating = existingRating.rating;
     existingRating.rating = rating;
     await existingRating.save();
-
     recipe.averageRating =
       (recipe.averageRating * recipe.ratingsCount - oldRating + rating) /
       recipe.ratingsCount;
-
     await recipe.save();
 
     return res.status(200).json({
@@ -132,13 +127,11 @@ export const rateRecipe = async (req, res, next)=>{
       averageRating: recipe.averageRating,
   });
   }
-
   await RecipeRating.create({
     userId,
     recipeId: id,
     rating,
   });
-
   recipe.averageRating =
     (recipe.averageRating * recipe.ratingsCount + rating) /
     (recipe.ratingsCount + 1);

@@ -4,10 +4,8 @@ import { generalField } from "../../Middlewares/validation.middleware.js";
 export const getRecipes = joi
   .object({
     mealType: joi.string().valid("breakfast", "lunch", "dinner", "snack"),
-
     minCalories: joi.number().min(0),
     maxCalories: joi.number().min(0),
-
     minProtein: joi.number().min(0),
 
     diet: joi.string().valid(
@@ -16,11 +14,8 @@ export const getRecipes = joi
       "keto",
       "low_carb"
     ),
-
     ingredient: joi.string().min(2),
-
     search: joi.string().min(2),
-
     sort: joi.string().valid(
       "calories",
       "macros.protein",
@@ -29,7 +24,6 @@ export const getRecipes = joi
     ),
 
     order: joi.string().valid("asc", "desc"),
-
     page: joi.number().min(1),
     limit: joi.number().min(1).max(50),
   })
@@ -41,7 +35,6 @@ export const getRecipes = joi
     rating: joi.number().min(1).max(5).required(),
   })
   .required();
-
 
 export const getRecipeById = joi.object({
   id: generalField.id.required(),
