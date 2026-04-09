@@ -6,16 +6,12 @@ const otpSchema = new Schema(
       ref: "User",
       required:true
     },
-    code:{
-      type:String,
-      required:true
-    },
+    code:{type:String,required:true},
     type:{
       type:String,
       enum:["confirmEmail","resetPassword"],
       required:true
     },
-
     expiresAt:{
       type:Date,
       required:true

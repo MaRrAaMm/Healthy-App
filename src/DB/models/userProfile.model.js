@@ -15,7 +15,6 @@ const profileSchema = new Schema({
   age:{type:Number,required: true},
 
   height:{type:Number,required: true},
-
   weight:{type: Number,required:true},
 
   goal:{
@@ -34,7 +33,7 @@ const profileSchema = new Schema({
     type:Number,
     required: true
   },
-  // =>gram
+  //=>gram
   macros:{
     protein:{
       type: Number, 

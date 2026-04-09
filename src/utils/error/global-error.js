@@ -2,7 +2,6 @@ import fs from "fs";
 import path from "path";
 
 export const globalError = (error,req,res,next) =>{
-    
     if(req.file){
         const fullPath = path.resolve(req.file.path);
         fs.unlinkSync(fullPath);

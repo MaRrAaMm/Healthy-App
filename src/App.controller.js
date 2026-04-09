@@ -22,5 +22,4 @@ const bootstrap = async (app, express) =>{
   app.use(notFound);
   app.use(globalError);
 };
-
 export default bootstrap;

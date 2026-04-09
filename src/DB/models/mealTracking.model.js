@@ -17,14 +17,8 @@ const mealTrackingSchema = new Schema(
       enum: ["breakfast","lunch", "dinner","snack"],
       required:true
     },
-    date:{
-      type:Date,
-      required:true
-    },
-    calories:{
-      type:Number,
-      required:true
-    },
+    date:{type:Date,required:true},
+    calories:{type:Number,required:true},
     macros:{
       protein:{
         type:Number,

@@ -123,11 +123,10 @@ export const forgetPassword = async(req, res, next)=>{
     type:"resetPassword",
     expiresAt: new Date(Date.now() + 10 * 60 * 1000),
   });
-
   await sendOtpEmail({
     to: user.email,
     otp:otpCode,
-    type:"resetPassword",
+    type:"resetPassword"
   });
 
   return res.status(200).json({
@@ -137,23 +136,18 @@ export const forgetPassword = async(req, res, next)=>{
 };
 
 export const verifyOtp = async (req, res, next) => {
-  const { email, otp} = req.body;
-
+  const {email, otp} = req.body;
   const user = await User.findOne({email});
-  if (!user) throw new Error("User not found");
-
+  if(!user) throw new Error("User not found");
   const otpRecord = await OTP.findOne({
-    userId: user._id,
+    userId:user._id,
     type: "resetPassword",
   }).sort({ createdAt: -1 });
-
-  if (!otpRecord) {
+  if(!otpRecord){
     throw new Error("OTP not found or expired");
   }
-
   const hashedInput = hashOTP(otp);
-
-  if (hashedInput !== otpRecord.code) {
+  if(hashedInput !== otpRecord.code){
     throw new Error("Invalid OTP");
   }
 
@@ -167,7 +161,6 @@ export const resetPassword = async(req, res, next)=>{
   const{email, newPassword}=req.body;
   const user = await User.findOne({email});
   if(!user) throw new Error("User not found");
-
 //hashing=> pre-save hook
   user.password = newPassword;
   await user.save();
@@ -182,12 +175,12 @@ export const resetPassword = async(req, res, next)=>{
 export const googleAuth = async(req, res, next)=>{
   const{idToken} = req.body;
   const googleUser =await verifyGoogleToken(idToken);
-  if (!googleUser.email_verified){
+  if(!googleUser.email_verified){
     throw new Error("Google email not verified");
   }
 
   let user = await User.findOne({email:googleUser.email});
-  if (!user){
+  if(!user){
     user = await User.create({
       userName:googleUser.name,
       email: googleUser.email,
@@ -195,8 +188,7 @@ export const googleAuth = async(req, res, next)=>{
       isEmailConfirmed:true,
     });
   }
-
-  if (user.provider !== "google"){
+  if(user.provider !== "google"){
     throw new Error("Email registered with password");
   }
   const token =generateToken({

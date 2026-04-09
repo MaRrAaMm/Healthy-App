@@ -3,7 +3,7 @@ import { Types } from "mongoose";
 
 export const isValid = (schema)=>{
   return (req, res, next) =>{
-    if (!schema || typeof schema.validate !== "function"){
+    if(!schema || typeof schema.validate !== "function"){
       throw new Error("Invalid schema");
     }
     const data={...req.body,...req.query,...req.params};
